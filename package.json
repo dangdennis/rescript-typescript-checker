@@ -1,0 +1,13 @@
+{
+  "name": "rescript-typescript-checker",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "rescript": "12"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
