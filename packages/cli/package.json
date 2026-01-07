@@ -1,0 +1,17 @@
+{
+  "name": "res-ts",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "res-ts": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "res-ts-core": "workspace:*",
+    "typescript": "workspace:*"
+  }
+}

@@ -1,13 +1,11 @@
 {
-  "name": "rescript-typescript-checker",
-  "module": "index.ts",
-  "type": "module",
+  "name": "res-ts-workspace",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
-    "@types/bun": "latest",
-    "rescript": "12"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "rescript": "12.0.2",
+    "typescript": "latest"
   }
 }
