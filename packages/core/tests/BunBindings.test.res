@@ -1,12 +1,12 @@
 open BunTest
 
 type checkOptions = {dir: string}
-
-@module("../dist/index.js")
-external checkBindings: checkOptions => Js.Promise.t<checkResult> = "checkBindings"
-
 type checkResult
 type checkSummary
+
+@module("../dist/index.js")
+external checkBindings: checkOptions => Promise.t<checkResult> = "checkBindings"
+
 
 @get
 external summary: checkResult => checkSummary = "summary"
@@ -16,11 +16,11 @@ external errors: checkSummary => int = "errors"
 
 testDone("bun:test externals match @types/bun", done => {
   checkBindings({dir: "."})
-  ->Js.Promise.then_(result => {
+  ->Promise.then(result => {
     let errorCount = result->summary->errors
     expect(errorCount)->toBe(0)
     done()
-    Js.Promise.resolve()
+    Promise.resolve()
   })
   ->ignore
 })

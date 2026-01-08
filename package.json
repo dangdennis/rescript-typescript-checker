@@ -10,12 +10,12 @@
     "typescript": "latest"
   },
   "scripts": {
-    "build": "bun run build:typescript && bun run build:rescript",
-    "build:typescript": "bun run --cwd packages/core build && bun run --cwd packages/cli build",
-    "build:rescript": "bunx rescript build",
+    "build": "bun run b:typescript && bun run b:rescript",
+    "b:typescript": "bun run --cwd packages/core build && bun run --cwd packages/cli build",
+    "b:rescript": "bunx rescript build",
     "test:rescript": "bun run --cwd packages/core build && bun run --cwd packages/cli build && rescript build && bun test packages/core/tests",
-    "typecheck": "bun run typecheck:typescript && bun run typecheck:rescript",
-    "typecheck:typescript": "bun run --cwd packages/core check && bun run --cwd packages/cli check",
-    "typecheck:rescript": "bunx rescript"
+    "typecheck": "bun run tc:typescript && bun run tc:rescript",
+    "tc:typescript": "bun run --cwd packages/core check && bun run --cwd packages/cli check",
+    "tc:rescript": "bunx rescript"
   }
 }
