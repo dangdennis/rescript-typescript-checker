@@ -1,0 +1,14 @@
+{
+  "name": "res-ts-workspace",
+  "sources": [
+    {
+      "dir": "packages/core/tests",
+      "subdirs": true
+    }
+  ],
+  "package-specs": {
+    "module": "es6",
+    "in-source": true
+  },
+  "suffix": ".js"
+}

@@ -10,10 +10,10 @@ export function collectExternalDecls(
   for (const dir of sourceDirs) {
     for (const file of listResFiles(dir)) {
       const ext = path.extname(file);
-      const rel = path.relative(dir, file).replace(ext, "");
-      const existing = fileMap.get(rel);
+      const moduleKey = file.slice(0, -ext.length);
+      const existing = fileMap.get(moduleKey);
       if (!existing || ext === ".resi") {
-        fileMap.set(rel, { path: file, ext });
+        fileMap.set(moduleKey, { path: file, ext });
       }
     }
   }
@@ -74,7 +74,7 @@ function scanExternals(source: string, filePath: string): ExternalDecl[] {
       i = skipBlockComment(source, i);
       continue;
     }
-    if (isWhitespace(ch)) {
+    if (ch && isWhitespace(ch)) {
       i += 1;
       continue;
     }
@@ -151,7 +151,7 @@ function isWhitespace(ch: string): boolean {
 
 function skipWhitespace(source: string, start: number): number {
   let i = start;
-  while (i < source.length && isWhitespace(source[i])) {
+  while (i < source.length && source[i] && isWhitespace(source[i])) {
     i += 1;
   }
   return i;
@@ -196,7 +196,7 @@ function readIdentifier(source: string, start: number) {
   let value = "";
   while (i < source.length) {
     const ch = source[i];
-    if (!/[A-Za-z0-9_']/ .test(ch)) {
+    if (!ch || !/[A-Za-z0-9_']/.test(ch)) {
       break;
     }
     value += ch;

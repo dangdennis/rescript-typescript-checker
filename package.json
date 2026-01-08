@@ -5,7 +5,17 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@types/bun": "latest",
     "rescript": "12.0.2",
     "typescript": "latest"
+  },
+  "scripts": {
+    "build": "bun run build:typescript && bun run build:rescript",
+    "build:typescript": "bun run --cwd packages/core build && bun run --cwd packages/cli build",
+    "build:rescript": "bunx rescript build",
+    "test:rescript": "bun run --cwd packages/core build && bun run --cwd packages/cli build && rescript build && bun test packages/core/tests",
+    "typecheck": "bun run typecheck:typescript && bun run typecheck:rescript",
+    "typecheck:typescript": "bun run --cwd packages/core check && bun run --cwd packages/cli check",
+    "typecheck:rescript": "bunx rescript"
   }
 }

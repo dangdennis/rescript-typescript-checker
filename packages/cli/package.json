@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "res-ts-core": "workspace:*",
-    "typescript": "workspace:*"
+    "typescript": "^5.9.3"
   }
 }

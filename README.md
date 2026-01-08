@@ -1,15 +1,30 @@
 # rescript-typescript-checker
 
-To install dependencies:
+Type-check ReScript externals against real TypeScript types.
+
+## Setup
 
 ```bash
 bun install
 ```
 
-To run:
+## Build
 
 ```bash
-bun run index.ts
+bun run --cwd packages/core build
+bun run --cwd packages/cli build
 ```
 
-This project was created using `bun init` in bun v1.3.3. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+## CLI
+
+```bash
+bun run --cwd packages/cli build
+node packages/cli/dist/index.js check .
+node packages/cli/dist/index.js check path/to/project --json
+```
+
+## ReScript tests
+
+```bash
+bun run test:rescript
+```

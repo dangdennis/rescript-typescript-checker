@@ -1,5 +1,5 @@
 import path from "node:path";
-import ts from "typescript";
+import * as ts from "typescript";
 import type { Diagnostic, ExternalDecl } from "../types.js";
 import { rescriptTypeToTs } from "./rescript-to-ts.js";
 
@@ -21,7 +21,7 @@ export function checkWithTypeScript(
     ? loadTsConfig(configPath)
     : defaultCompilerOptions(cwd);
 
-  const { sourceText, indexMap } = buildSyntheticSource(externals);
+  const { sourceText, indexMap, warningMap } = buildSyntheticSource(externals);
   const syntheticPath = path.join(cwd, ".res-ts.synthetic.ts");
 
   const host = ts.createCompilerHost(compilerOptions, true);
@@ -80,6 +80,16 @@ export function checkWithTypeScript(
       continue;
     }
 
+    for (const warning of warningMap.get(index) ?? []) {
+      diagnostics.push({
+        level: "warning",
+        message: warning,
+        file: ext.file,
+        line: ext.line,
+        column: ext.column,
+      });
+    }
+
     const actualOk = checker.isTypeAssignableTo(actual, expected);
     if (!actualOk) {
       diagnostics.push({
@@ -104,6 +114,7 @@ function buildSyntheticSource(externals: ExternalDecl[]) {
     number,
     { actualName: string; expectedName: string }
   >();
+  const warningMap = new Map<number, string[]>();
 
   for (const ext of externals) {
     if (ext.attributes.module) {
@@ -123,15 +134,24 @@ function buildSyntheticSource(externals: ExternalDecl[]) {
     const expectedName = `__expected_${index}`;
     const actualName = `__actual_${index}`;
     indexMap.set(index, { actualName, expectedName });
+    const warnings: string[] = [];
 
-    for (const warning of expected.warnings) {
-      lines.push(`// warning: ${warning}`);
+    warnings.push(...expected.warnings);
+    if (ext.attributes.get || ext.attributes.set || ext.attributes.send) {
+      warnings.push(
+        "Attribute-based property access may need manual review for exact TypeScript semantics.",
+      );
     }
+    if (ext.attributes.new) {
+      warnings.push("Constructor externals may need manual review.");
+    }
+    warningMap.set(index, warnings);
+
     lines.push(`type ${expectedName} = ${expected.typeText};`);
     lines.push(`type ${actualName} = ${buildActualTypeQuery(ext, imports)};`);
   });
 
-  return { sourceText: lines.join("\n"), indexMap };
+  return { sourceText: lines.join("\n"), indexMap, warningMap };
 }
 
 function buildActualTypeQuery(
@@ -157,6 +177,9 @@ function buildPropertyAccess(parts: string[]): string {
     return "__Global";
   }
   const [first, ...rest] = parts;
+  if (!first) {
+    return "__Global";
+  }
   return rest.reduce((acc, part) => {
     if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(part)) {
       return `${acc}.${part}`;

@@ -16,6 +16,6 @@
     "test": "node --test"
   },
   "dependencies": {
-    "typescript": "workspace:*"
+    "typescript": "^5.9.3"
   }
 }
