@@ -151,7 +151,11 @@ function isWhitespace(ch: string): boolean {
 
 function skipWhitespace(source: string, start: number): number {
   let i = start;
-  while (i < source.length && source[i] && isWhitespace(source[i])) {
+  while (i < source.length) {
+    const ch = source[i];
+    if (!ch || !isWhitespace(ch)) {
+      break;
+    }
     i += 1;
   }
   return i;
